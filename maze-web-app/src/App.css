@@ -1,0 +1,78 @@
+
+/* Chrome, Safari, Edge, Opera */
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
+  overflow-y: hidden;
+  background-color: #FEFAE0;
+}
+
+#root {
+  overflow-y: auto;
+  height: 100%;
+  font-family: "Courier New", Courier, monospace;
+  color: #606C38;
+}
+
+
+.App {
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+  font-size: 5px;
+  image-rendering: pixelated;
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.pictures {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1%
+}
+
+.picture {
+  margin-left: 1%;
+  margin-bottom: 1%;
+}
+
+.new-button-container {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topnavbutton {
+  background-color: #1976d2;
+  display: flex;
+  justify-content: "space-between";
+  align-items: center;
+  border: none;
+  font-size: medium;
+}
+
+.topnavbutton:hover {
+  background-color: #155fa9;
+}

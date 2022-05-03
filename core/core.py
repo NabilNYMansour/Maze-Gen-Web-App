@@ -229,17 +229,17 @@ def main():
     print("Progress: ", len(usedVertices)-1, "/", len(vertices)-1, end="\r")
     print("\nDONE: maze generation")
 
-    DrawPath(vertices[0], (1, vertices[-1][1]),
-             vertices, edges, graph, usedEdges, draw, "tomato")
-    DrawPath(vertices[0], (vertices[-1][1], 1),
-             vertices, edges, graph, usedEdges, draw, "purple")
-    DrawPath(vertices[0], vertices[-1], vertices,
-             edges, graph, usedEdges, draw, "red")
+    # DrawPath(vertices[0], (1, vertices[-1][1]),
+    #          vertices, edges, graph, usedEdges, draw, "tomato")
+    # DrawPath(vertices[0], (vertices[-1][1], 1),
+    #          vertices, edges, graph, usedEdges, draw, "purple")
+    # DrawPath(vertices[0], vertices[-1], vertices,
+    #          edges, graph, usedEdges, draw, "red")
 
-    print("DONE: path finding")
+    # print("DONE: path finding")
 
-    print("Resizing image...")
-    img = img.resize((size*10, size*10), Image.BOX)
+    # print("Resizing image...")
+    # img = img.resize((size*10, size*10), Image.BOX)
 
     print("Sending image...")
     img_io = BytesIO()
