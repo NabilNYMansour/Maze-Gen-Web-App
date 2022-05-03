@@ -37,6 +37,11 @@ img {
   image-rendering: pixelated;
 }
 
+button {
+  border-radius: 4px;
+  font-size: 1em;
+}
+
 .loading {
   position: absolute;
   top: 50%;
@@ -75,4 +80,21 @@ img {
 
 .topnavbutton:hover {
   background-color: #155fa9;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  justify-content: "center";
+}
+
+@media screen and (max-width: 416px) {
+  .pictures {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1%
+  }
 }

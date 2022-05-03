@@ -1,5 +1,12 @@
-import { Toolbar, CircularProgress, Button, AppBar } from "@mui/material";
-// import AddIcon from '@mui/icons-material/Add';
+import {
+  Toolbar,
+  CircularProgress,
+  Button,
+  AppBar,
+  Typography,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -55,17 +62,15 @@ function App() {
           <div>
             <form action="https://github.com/NabilNYMansour/Maze-Gen-Web-App">
               <a href="https://github.com/NabilNYMansour/Maze-Gen-Web-App">
-                <button
-                  type="submit"
-                  style={{ paddingRight: "10px" }}
-                  className="topnavbutton"
-                >
-                  Github
+                <button type="submit" className="topnavbutton">
+                  <GitHubIcon />
                 </button>
               </a>
             </form>
           </div>
-          <div>Maze Generator</div>
+          <Typography fontFamily="Courier New" variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Maze Generator
+          </Typography>
         </Toolbar>
       </AppBar>
       {loading ? (
@@ -83,7 +88,7 @@ function App() {
                 <CircularProgress />
               ) : (
                 <Button variant="contained" onClick={() => addNewPic()}>
-                  +
+                  <AddIcon />
                 </Button>
               )}
             </div>
