@@ -7,63 +7,108 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 
-export const MainApp = () => {
-  const [imgCount, setImgCount] = useState<number>(0);
+export const MainApp = ({ role }: { role: string }) => {
+  const [imgList, setImgList] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingNew, setLoadingNew] = useState<boolean>(false);
   const [blobs, setBlobs] = useState<string[]>([]);
-  const [blobsCount, setBlobsCount] = useState<number>(1);
+  const [currentBlobCount, setCurrentBlobCount] = useState<number>(0);
+  const [currentBlobIndex, setCurrentBlobIndex] = useState<number>(-1);
+  const [highLightedImg, setHighLightedImg] = useState<number>(-1);
 
   useEffect(() => {
-    const getImgs = async (id: number) =>
-      await fetch("http://localhost:8000/Show/" + id, {
-        mode: 'cors',
-        credentials: "include",
-      })
-        .then((response) => response.blob())
-        .then((data) => {
-          setBlobs([...blobs, URL.createObjectURL(data)]);
-          setBlobsCount(blobsCount + 1);
-        });
-
-    const getRes = async () => {
-      if (imgCount > 0 && blobsCount <= imgCount) {
-        getImgs(blobsCount);
-      } else {
-        await fetch("http://localhost:8000/GetImagesCount", {
-          mode: 'cors',
+    const getImgList = async () => {
+      if (loading) {
+        await fetch("http://localhost:8000/GetImgList", {
+          mode: "cors",
           credentials: "include",
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
-
-            setImgCount(data.count);
-            if (imgCount > 0 && blobsCount <= imgCount) {
-              getImgs(blobsCount);
+            setImgList(data);
+            setLoading(imgList.length === 0);
+            if (imgList.length !== 0) {
+              setCurrentBlobCount(imgList[0]);
+              setCurrentBlobIndex(0);
             }
-            setLoading(false);
           });
       }
     };
-    getRes();
-  }, [imgCount, blobsCount]);
+
+    const getImgsCount = async () => {
+      await fetch("http://localhost:8000/GetImagesCount", {
+        mode: "cors",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.count !== 0) {
+            getImgList();
+          } else {
+            setLoading(false);
+          }
+        });
+    };
+
+    getImgsCount();
+  }, [imgList, loading]);
+
+  useEffect(() => {
+    const getImg = async (id: number) => {
+      if (currentBlobIndex !== imgList.length && !loading) {
+        await fetch("http://localhost:8000/Show/" + id, {
+          mode: "cors",
+          credentials: "include",
+        })
+          .then((response) => response.blob())
+          .then((data) => {
+            if (data.type === "image/jpeg") {
+              setBlobs([...blobs, URL.createObjectURL(data)]);
+              setCurrentBlobIndex(currentBlobIndex + 1);
+              setCurrentBlobCount(imgList[currentBlobIndex]);
+            }
+          });
+      }
+    };
+
+    getImg(currentBlobCount);
+  }, [currentBlobCount, currentBlobIndex, loading]);
 
   const addNewPic = useCallback(async () => {
     setLoadingNew(true);
     await fetch("http://localhost:8000/New", {
-      mode: 'cors',
+      mode: "cors",
       credentials: "include",
     })
       .then((response) => response.blob())
       .then((data) => {
         setBlobs([...blobs, URL.createObjectURL(data)]);
         setLoadingNew(false);
+        imgList.length > 0
+          ? setImgList([...imgList, imgList[imgList.length - 1] + 1])
+          : setImgList([1]);
       });
-  }, [blobs]);
+  }, [blobs, imgList]);
+
+  const removePic = useCallback(
+    async (index: number) => {
+      await fetch("http://localhost:8000/Delete/" + imgList[index], {
+        mode: "cors",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setImgList(imgList.filter((_, i) => i !== index));
+          setBlobs(blobs.filter((_, i) => i !== index));
+        });
+    },
+    [blobs, imgList]
+  );
 
   return (
     <div className="App">
@@ -95,14 +140,57 @@ export const MainApp = () => {
       ) : (
         <div className="pictures">
           {blobs.map((blob, i) => (
-            <img className="picture" key={i} alt="a maze" src={blob}></img>
+            <div className="img-container" key={i}>
+              <img
+                onMouseEnter={() => {
+                  if (role === "admin") {
+                    setHighLightedImg(i);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (role === "admin") {
+                    setHighLightedImg(-1);
+                  }
+                }}
+                className={
+                  role === "admin" || highLightedImg !== i
+                    ? ""
+                    : "hover-over-img"
+                }
+                key={i}
+                alt="a maze"
+                src={blob}
+              ></img>
+              {role === "admin" ? (
+                <div
+                  onMouseEnter={() => {
+                    setHighLightedImg(i);
+                  }}
+                  hidden={highLightedImg !== i}
+                >
+                  <Button
+                    onClick={() => removePic(i)}
+                    className="remove-button"
+                    variant="contained"
+                  >
+                    <RemoveIcon />
+                  </Button>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
           ))}
-          <div className="picture">
+          <div>
             <div className="new-button-container">
               {loadingNew ? (
                 <CircularProgress />
               ) : (
-                <Button variant="contained" onClick={() => addNewPic()}>
+                <Button
+                  disabled={role !== "admin"}
+                  variant="contained"
+                  onClick={() => addNewPic()}
+                >
                   <AddIcon />
                 </Button>
               )}
@@ -110,6 +198,13 @@ export const MainApp = () => {
           </div>
         </div>
       )}
+      {/* <button
+        onClick={() => {
+          console.log(imgList);
+        }}
+      >
+        TEST
+      </button> */}
     </div>
   );
 };

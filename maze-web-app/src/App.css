@@ -30,13 +30,6 @@ body,
   pointer-events: none;
 }
 
-img {
-  width: 200px;
-  height: 200px;
-  font-size: 5px;
-  image-rendering: pixelated;
-}
-
 button {
   border-radius: 4px;
   font-size: 1em;
@@ -46,19 +39,6 @@ button {
   position: absolute;
   top: 50%;
   left: 50%;
-}
-
-.pictures {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1%
-}
-
-.picture {
-  margin-left: 1%;
-  margin-bottom: 1%;
 }
 
 .new-button-container {
@@ -129,4 +109,39 @@ button {
 .login-field {
   display: flex;
   flex-direction: row;
+}
+
+.remove-button{
+  position: absolute;
+}
+
+.img-container {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  margin-left: 1%;
+  margin-bottom: 1%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+img {
+  width: 200px;
+  height: 200px;
+  image-rendering: pixelated;
+  position: absolute;
+  left: 0;
+}
+
+.hover-over-img {
+  image-rendering: auto;
+}
+
+.pictures {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 25px;
 }

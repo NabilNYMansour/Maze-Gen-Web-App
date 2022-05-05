@@ -5,9 +5,10 @@ import { LoginPage } from "./components/loginPage";
 
 function App() {
   const [loggedIn, setLogIn] = useState<boolean>(false);
+  const [role, setRole] = useState<string>("viewer");
 
   return <div>
-    {loggedIn ? <MainApp/>: <LoginPage setLogIn={setLogIn}/>}
+    {loggedIn ? <MainApp role={role}/>: <LoginPage setLogIn={setLogIn} setRole={setRole}/>}
   </div>
 }
 

@@ -179,6 +179,23 @@ def reset():
     else:
         return "No current User"
 
+
+@app.route('/GetImgList')
+def imglist():
+    try:
+        user = User(id=session["currentUser"][0], username=session["currentUser"][1], role=session["currentUser"][2])
+        oso.authorize(user, "read", Maze())
+        print()
+        response = make_response(jsonify([maze.id for maze in Maze.query.all()]))
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Credentials ', 'true')
+        return response
+    except KeyError:
+        response = make_response(jsonify({'complete': False, 'errormsg': 'No current User'}))
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Credentials ', 'true')
+        return response, 404
+
 # @app.route('/set/<key>/<val>')
 # def set(key, val):
 #     session[key] = val
