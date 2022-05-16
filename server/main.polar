@@ -23,3 +23,9 @@ has_permission(actor: User, "read", _maze: Maze) if
 
 has_permission(actor: User, "create", _maze: Maze) if
     actor.role = "creator";
+
+# >>> admin = User(username="admin", role="admin")
+# >>> creator = User(username="creator", role="creator")
+# >>> viewer = User(username="viewer", role="viewer")
+# >>> db.session.add_all([admin, creator, viewer])
+# >>> db.session.commit()

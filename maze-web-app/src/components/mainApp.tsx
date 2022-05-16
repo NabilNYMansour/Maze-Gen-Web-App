@@ -1,15 +1,16 @@
 import {
-  Toolbar,
   CircularProgress,
   Button,
-  AppBar,
-  Typography,
+
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
+
+export const getColor = (role : string) => role === "admin" ? "success" : role === "creator" ? "secondary" : "primary";
+export const getColorCode = (role : string) => role === "admin" ? "#388e3c" : role === "creator" ? "#ab47bc" : role === "viewer" ? "#1976d2" : "#989898";
+export const getColorCodeLighter = (role : string) => role === "admin" ? "#9ffba4" : role === "creator" ? "#ed95fd" : role === "viewer" ? "#8cc6ff" : "#b9b9b9";
 
 export const MainApp = ({ role }: { role: string }) => {
   const [imgList, setImgList] = useState<number[]>([]);
@@ -111,31 +112,10 @@ export const MainApp = ({ role }: { role: string }) => {
   );
 
   return (
-    <div className="App">
-      <AppBar position="static">
-        <Toolbar>
-          <div>
-            <form action="https://github.com/NabilNYMansour/Maze-Gen-Web-App">
-              <a href="https://github.com/NabilNYMansour/Maze-Gen-Web-App">
-                <button type="submit" className="topnavbutton">
-                  <GitHubIcon />
-                </button>
-              </a>
-            </form>
-          </div>
-          <Typography
-            fontFamily="Courier New"
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
-          >
-            Maze Generator
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <div>
       {loading ? (
         <div className="loading">
-          <CircularProgress />
+          <CircularProgress color={getColor(role)}/>
         </div>
       ) : (
         <div className="pictures">
@@ -172,6 +152,7 @@ export const MainApp = ({ role }: { role: string }) => {
                     onClick={() => removePic(i)}
                     className="remove-button"
                     variant="contained"
+                    color={getColor(role)}
                   >
                     <RemoveIcon />
                   </Button>
@@ -187,9 +168,10 @@ export const MainApp = ({ role }: { role: string }) => {
                 <CircularProgress />
               ) : (
                 <Button
-                  disabled={role !== "admin"}
+                  disabled={role === "viewer"}
                   variant="contained"
                   onClick={() => addNewPic()}
+                  color={getColor(role)}
                 >
                   <AddIcon />
                 </Button>

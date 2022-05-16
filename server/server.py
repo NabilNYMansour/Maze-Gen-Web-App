@@ -10,6 +10,7 @@ oso = Oso()
 app = Flask(__name__)
 app.secret_key = "super secret key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/mazes.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(__name__)
 db = SQLAlchemy(app)
 
@@ -196,14 +197,6 @@ def imglist():
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 404
 
-# @app.route('/set/<key>/<val>')
-# def set(key, val):
-#     session[key] = val
-#     return 'ok'
 
-# @app.route('/get/<key>')
-# def get(key):
-#     if key in list(session.keys()) and session.get(key) != None:
-#         return session.get(key)
-#     else:
-#         return "no entry found"
+if __name__ == "__main__":
+    app.run(port=8000)

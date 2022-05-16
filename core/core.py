@@ -247,3 +247,6 @@ def main():
     img_io.seek(0)
 
     return send_file(img_io, mimetype='image/jpeg'), 200
+
+if __name__ == "__main__":
+    app.run(port=5000)

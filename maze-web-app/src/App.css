@@ -50,16 +50,15 @@ button {
 }
 
 .topnavbutton {
-  background-color: #1976d2;
   display: flex;
   justify-content: "space-between";
   align-items: center;
   border: none;
-  font-size: medium;
+  padding : 10px;
 }
 
 .topnavbutton:hover {
-  background-color: #155fa9;
+  filter: brightness(85%);
 }
 
 .topnav {
@@ -81,7 +80,7 @@ button {
 
 .login-container {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 80vh;
   font-size: calc(10px + 2vmin);
   color: white;
   display: flex;
@@ -93,11 +92,16 @@ button {
 .login-title {
   text-align: center;
   margin-bottom: 25px;
-  font-size: xx-large;
+  font-size: x-large;
+}
+
+.desc-title {
+  text-align: center;
+  margin-top: 25px;
+  font-size: large;
 }
 
 .login {
-  background-color: #8cc6ff;
   color: #282c34;
   padding: 25px;
   border-radius: 4px;
@@ -144,4 +148,9 @@ img {
   align-items: center;
   justify-content: flex-start;
   padding: 25px;
+}
+
+.question-button {
+  border-radius: 8px;
+  position: absolute;
 }
