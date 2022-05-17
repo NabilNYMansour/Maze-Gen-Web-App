@@ -50,7 +50,7 @@ def new():
             raise ForbiddenError
 
         # url = 'http://127.0.0.1:5000/makeNew'
-        url = 'http://nabilmansour.com:5000/makeNew'
+        url = 'https://nabilmansour.com:5000/makeNew'
         data = {'size': 25, 'password': 'testing'}
         data = json.dumps(data)
         data = str(data)
