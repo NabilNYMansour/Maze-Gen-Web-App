@@ -46,7 +46,11 @@ def new():
         oso.authorize(user, "create", Maze())
         print("new", ">>>>>>>>>>>>>>", session["currentUser"])
 
-        url = 'http://127.0.0.1:5000/makeNew'
+        if (db.session.query(Maze).count() > 20):
+            raise ForbiddenError
+
+        # url = 'http://127.0.0.1:5000/makeNew'
+        url = 'http://nabilmansour.com:5000/makeNew'
         data = {'size': 25, 'password': 'testing'}
         data = json.dumps(data)
         data = str(data)
@@ -61,18 +65,21 @@ def new():
 
         response = make_response(contents)
         response.headers.set('Content-Type', 'image/jpeg')
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response
 
     except ForbiddenError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'Permission Denied'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 403
     except KeyError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'No current User'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 404
 
@@ -85,12 +92,14 @@ def getCount():
 
         count = db.session.query(Maze).count()
         response = make_response(jsonify({'count': count}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response
     except KeyError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'No current User'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 404
 
@@ -107,17 +116,20 @@ def show(id):
         if maze:
             response = make_response(maze.img)
             response.headers.set('Content-Type', 'image/jpeg')
-            response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+            # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+            response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
             response.headers.add('Access-Control-Allow-Credentials ', 'true')
             return response
         else:
             response = make_response(jsonify(None))
-            response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+            # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+            response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
             response.headers.add('Access-Control-Allow-Credentials ', 'true')
             return response
     except KeyError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'No current User'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 404
 
@@ -137,17 +149,20 @@ def delete(id):
             response = make_response(
                 jsonify({'complete': False, 'errormsg': 'no entry found'}))
 
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response
     except ForbiddenError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'Permission Denied'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 403
     except KeyError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'No current User'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 404
 
@@ -161,7 +176,8 @@ def login(name):
     session['currentUser'] = [user.id, user.username, user.role]
     print("login", ">>>>>>>>>>>>>", session["currentUser"])
     response = make_response(jsonify({'login': True, 'name': name.lower(), 'role': user.role}))
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
     response.headers.add('Access-Control-Allow-Credentials ', 'true')
     return response
 
@@ -188,12 +204,14 @@ def imglist():
         oso.authorize(user, "read", Maze())
         print()
         response = make_response(jsonify([maze.id for maze in Maze.query.all()]))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response
     except KeyError:
         response = make_response(jsonify({'complete': False, 'errormsg': 'No current User'}))
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Origin', 'https://nabilmansour.com/MazeGen')
         response.headers.add('Access-Control-Allow-Credentials ', 'true')
         return response, 404
 

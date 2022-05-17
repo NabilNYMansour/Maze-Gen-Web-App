@@ -1,25 +1,37 @@
-import {
-  CircularProgress,
-  Button,
-
-} from "@mui/material";
+import { CircularProgress, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 
-export const getColor = (role : string) => role === "admin" ? "success" : role === "creator" ? "secondary" : "primary";
-export const getColorCode = (role : string) => role === "admin" ? "#388e3c" : role === "creator" ? "#ab47bc" : role === "viewer" ? "#1976d2" : "#989898";
-export const getColorCodeLighter = (role : string) => role === "admin" ? "#9ffba4" : role === "creator" ? "#ed95fd" : role === "viewer" ? "#8cc6ff" : "#b9b9b9";
+export const getColor = (role: string) =>
+  role === "admin" ? "success" : role === "creator" ? "secondary" : "primary";
+export const getColorCode = (role: string) =>
+  role === "admin"
+    ? "#388e3c"
+    : role === "creator"
+    ? "#ab47bc"
+    : role === "viewer"
+    ? "#1976d2"
+    : "#989898";
+export const getColorCodeLighter = (role: string) =>
+  role === "admin"
+    ? "#9ffba4"
+    : role === "creator"
+    ? "#ed95fd"
+    : role === "viewer"
+    ? "#8cc6ff"
+    : "#b9b9b9";
 
 export const MainApp = ({ role }: { role: string }) => {
   const [imgList, setImgList] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingNew, setLoadingNew] = useState<boolean>(false);
+  const [loadingNew, setLoadingNew] = useState<boolean>(true);
   const [blobs, setBlobs] = useState<string[]>([]);
   const [currentBlobCount, setCurrentBlobCount] = useState<number>(0);
   const [currentBlobIndex, setCurrentBlobIndex] = useState<number>(-1);
   const [highLightedImg, setHighLightedImg] = useState<number>(-1);
+  const [imgCount, setImgCount] = useState<number>(0);
 
   useEffect(() => {
     const getImgList = async () => {
@@ -47,6 +59,7 @@ export const MainApp = ({ role }: { role: string }) => {
       })
         .then((response) => response.json())
         .then((data) => {
+          setImgCount(data.count);
           if (data.count !== 0) {
             getImgList();
           } else {
@@ -79,6 +92,12 @@ export const MainApp = ({ role }: { role: string }) => {
     getImg(currentBlobCount);
   }, [currentBlobCount, currentBlobIndex, loading]);
 
+  useEffect(
+    () =>
+      imgCount === blobs.length ? setLoadingNew(false) : setLoadingNew(true),
+    [blobs.length, imgCount]
+  );
+
   const addNewPic = useCallback(async () => {
     setLoadingNew(true);
     await fetch("http://localhost:8000/New", {
@@ -103,6 +122,7 @@ export const MainApp = ({ role }: { role: string }) => {
       })
         .then((response) => response.json())
         .then((data) => {
+          setLoadingNew(true);
           console.log(data);
           setImgList(imgList.filter((_, i) => i !== index));
           setBlobs(blobs.filter((_, i) => i !== index));
@@ -115,7 +135,7 @@ export const MainApp = ({ role }: { role: string }) => {
     <div>
       {loading ? (
         <div className="loading">
-          <CircularProgress color={getColor(role)}/>
+          <CircularProgress color={getColor(role)} />
         </div>
       ) : (
         <div className="pictures">
@@ -141,7 +161,7 @@ export const MainApp = ({ role }: { role: string }) => {
                 alt="a maze"
                 src={blob}
               ></img>
-              {role === "admin" ? (
+              {role === "admin" && ! loadingNew? (
                 <div
                   onMouseEnter={() => {
                     setHighLightedImg(i);
@@ -165,28 +185,30 @@ export const MainApp = ({ role }: { role: string }) => {
           <div>
             <div className="new-button-container">
               {loadingNew ? (
-                <CircularProgress />
+                <CircularProgress color={getColor(role)} />
               ) : (
-                <Button
-                  disabled={role === "viewer"}
-                  variant="contained"
-                  onClick={() => addNewPic()}
-                  color={getColor(role)}
-                >
-                  <AddIcon />
-                </Button>
+                <div>
+                  <Button
+                    disabled={role === "viewer" || blobs.length > 20}
+                    variant="contained"
+                    onClick={() => addNewPic()}
+                    color={getColor(role)}
+                  >
+                    <AddIcon />
+                  </Button>
+                  <div>
+                    {role !== "viewer" && blobs.length > 20 ? (
+                      <div className="max-reached-title">MAX REACHED</div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>
         </div>
       )}
-      {/* <button
-        onClick={() => {
-          console.log(imgList);
-        }}
-      >
-        TEST
-      </button> */}
     </div>
   );
 };
