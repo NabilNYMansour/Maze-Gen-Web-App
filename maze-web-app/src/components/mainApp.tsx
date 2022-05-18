@@ -83,7 +83,7 @@ export const MainApp = ({ role }: { role: string }) => {
             if (data.type === "image/jpeg") {
               setBlobs([...blobs, URL.createObjectURL(data)]);
               setCurrentBlobIndex(currentBlobIndex + 1);
-              setCurrentBlobCount(imgList[currentBlobIndex]);
+              setCurrentBlobCount(imgList[currentBlobIndex + 1]);
             }
           });
       }
